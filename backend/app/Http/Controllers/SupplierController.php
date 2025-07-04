@@ -45,7 +45,6 @@ class SupplierController extends Controller
 
     public function store(SupplierRequest $request)
     {
-        Log::info('Creating supplier with data: ', $request->all());
         $data = $request->validated();
         $supplier = $this->supplierService->createSupplier($data);
         return response()->json($supplier, 201);
