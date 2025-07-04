@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('supplier', function (Blueprint $table) {
+        Schema::create('suppliers', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('phone')();
-            $table->string('address')();
-            $table->string('document_type')();
-            $table->string('document_number')();
+            $table->string('phone');
+            $table->string('address');
+            $table->string('document_type');
+            $table->string('document_number');
             $table->timestamps();
         });
     }
