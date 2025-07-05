@@ -1,12 +1,7 @@
 <script setup>
 import { Users, Plus } from "lucide-vue-next";
 
-const props = defineProps({
-  onNewSupplier: {
-    type: Function,
-    default: () => {},
-  },
-});
+const emit = defineEmits(["open-form"]);
 </script>
 
 <template>
@@ -20,7 +15,7 @@ const props = defineProps({
           </h1>
         </div>
         <button
-          @click="props.onNewSupplier"
+          @click="emit('open-form')"
           class="flex items-center gap-2 bg-zinc-800 hover:bg-zinc-900 text-white px-4 py-2 rounded-md transition-colors cursor-pointer"
         >
           <Plus class="h-4 w-4" />
