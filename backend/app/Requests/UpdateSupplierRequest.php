@@ -2,7 +2,10 @@
 
 namespace App\Requests;
 
+use App\Rules\ValidCnpj;
+use App\Rules\ValidCpf;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateSupplierRequest extends FormRequest
 {
@@ -13,24 +16,21 @@ class UpdateSupplierRequest extends FormRequest
 
     public function rules(): array
     {
-        $rules = [
-            'name' => 'string|max:255',
-            'phone' => 'nullable|string|max:20',
-            'address' => 'nullable|string|max:255',
-            'document_type' => 'string|max:50',
-            'document_number' => [
-                'string',
-                'max:50',
-                'unique:suppliers,document_number,' . $this->supplier?->id,
-            ],
-        ];
+        $documentType = $this->input('document_type');
 
-        if ($this->document_type === 'CPF') {
-            $rules['document_number'][] = new ValidCpf();
-        } elseif ($this->document_type === 'CNPJ') {
-            $rules['document_number'][] = new ValidCnpj();
+        $documentRule = 'sometimes|required';
+        if ($documentType === 'CPF') {
+            $documentRule = ['sometimes', 'required', new ValidCpf];
+        } elseif ($documentType === 'CNPJ') {
+            $documentRule = ['sometimes', 'required', new ValidCnpj];
         }
 
-        return $rules;
+        return [
+            'name' => 'sometimes|required|string|max:255',
+            'phone' => 'sometimes|required|string|max:20',
+            'address' => 'sometimes|required|string|max:255',
+            'document_type' => ['sometimes', 'required', 'string', Rule::in(['CPF', 'CNPJ'])],
+            'document_number' => $documentRule,
+        ];
     }
 }
