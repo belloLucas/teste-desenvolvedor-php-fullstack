@@ -2,6 +2,7 @@
 import SupplierTable from "./SupplierTable.vue";
 import Pagination from "./Pagination.vue";
 import axios from "axios";
+import api from "../services/api";
 
 import { onMounted, ref, watch } from "vue";
 
@@ -18,28 +19,22 @@ const loading = ref(true);
 
 const emit = defineEmits(["update-supplier"]);
 
-const fetchSuppliers = async (url = "http://localhost:8000/api/suppliers") => {
+const fetchSuppliers = async (url = "/suppliers") => {
   loading.value = true;
   try {
-    const params = new URLSearchParams();
+    const filterParams = {};
     if (props.filters.search) {
-      params.append("name", props.filters.search);
+      filterParams.name = props.filters.search;
     }
-
     if (props.filters.document_type && props.filters.document_type !== "all") {
-      params.append("document_type", props.filters.document_type);
+      filterParams.document_type = props.filters.document_type;
     }
-
     if (props.filters.sort_by) {
-      params.append("sort_by", props.filters.sort_by);
+      filterParams.sort_by = props.filters.sort_by;
     }
 
-    const finalUrl = new URL(url);
-    params.forEach((value, key) => {
-      finalUrl.searchParams.append(key, value);
-    });
+    const response = await api.get(url, { params: filterParams });
 
-    const response = await axios.get(finalUrl.toString());
     suppliers.value = response.data.data;
 
     delete response.data.data;

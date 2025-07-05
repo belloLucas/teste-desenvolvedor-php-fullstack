@@ -2,6 +2,7 @@
 import { Edit, Trash2 } from "lucide-vue-next";
 import { useToasts } from "./toast/useToasts";
 import axios from "axios";
+import api from "../services/api";
 
 const { addToast } = useToasts();
 
@@ -20,9 +21,7 @@ const emit = defineEmits(["supplier-deleted", "update-supplier"]);
 
 const deleteSupplier = async (id) => {
   try {
-    const response = await axios.delete(
-      `http://localhost:8000/api/suppliers/${id}`
-    );
+    const response = await api.delete(`/suppliers/${id}`);
 
     if (response.status === 200) {
       addToast("Fornecedor excluído com sucesso.", "success");

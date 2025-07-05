@@ -2,6 +2,7 @@
 import { X } from "lucide-vue-next";
 import { ref, onMounted, computed } from "vue";
 import axios from "axios";
+import api from "../services/api";
 import { z } from "zod";
 import { useToasts } from "./toast/useToasts";
 import { vMaska } from "maska/vue";
@@ -83,13 +84,10 @@ const handleSubmit = async (event) => {
 
   try {
     if (isEditing.value) {
-      await axios.patch(
-        `http://localhost:8000/api/suppliers/${props.supplierData.id}`,
-        result.data
-      );
+      await api.patch(`suppliers/${props.supplierData.id}`, result.data);
       addToast("Fornecedor atualizado com sucesso!", "success");
     } else {
-      await axios.post("http://localhost:8000/api/suppliers", result.data);
+      await api.post("suppliers", result.data);
       addToast("Fornecedor cadastrado com sucesso!", "success");
     }
     emit("supplier-updated");
