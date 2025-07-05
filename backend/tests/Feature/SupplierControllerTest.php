@@ -107,3 +107,56 @@ it('should return 400 when document type or number are missing for document sear
     $response->assertStatus(400);
     $response->assertJson(['message' => 'Document type and number are required']);
 });
+
+it('should return a validation error if required fields are missing on creation', function () {
+    $supplierData = [
+        // 'name' => 'Supplier Without Name',
+        'phone' => '11987654321',
+        'address' => '123 Main St',
+        'document_type' => 'CNPJ',
+        'document_number' => '33406775000109',
+    ];
+
+    $response = $this->postJson('/api/suppliers', $supplierData);
+
+    $response->assertStatus(422);
+    $response->assertJsonValidationErrors('name');
+});
+
+it('should return a validation error for an invalid CPF', function () {
+    $supplierData = [
+        'name' => 'New Supplier',
+        'phone' => '11987654321',
+        'address' => '123 Main St',
+        'document_type' => 'CPF',
+        'document_number' => '11111111111',
+    ];
+
+    $response = $this->postJson('/api/suppliers', $supplierData);
+
+    $response->assertStatus(422);
+    $response->assertJsonValidationErrors('document_number');
+});
+
+it('should filter suppliers by name', function () {
+    Supplier::factory()->create(['name' => 'Supplier A']);
+    Supplier::factory()->create(['name' => 'Another Company']);
+
+    $response = $this->getJson('/api/suppliers?name=Supplier A');
+
+    $response->assertStatus(200);
+    $response->assertJsonCount(1, 'data');
+    $response->assertJsonFragment(['name' => 'Supplier A']);
+    $response->assertJsonMissing(['name' => 'Another Company']);
+});
+
+it('should filter suppliers by document type', function () {
+    Supplier::factory()->create(['document_type' => 'CPF', 'document_number' => '12345678901']);
+    Supplier::factory()->create(['document_type' => 'CNPJ', 'document_number' => '33406775000109']);
+
+    $response = $this->getJson('/api/suppliers?document_type=CPF');
+
+    $response->assertStatus(200);
+    $response->assertJsonCount(1, 'data');
+    $response->assertJsonFragment(['document_type' => 'CPF']);
+});
