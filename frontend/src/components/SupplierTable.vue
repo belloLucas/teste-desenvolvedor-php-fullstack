@@ -117,6 +117,7 @@ const updateSupplier = (supplier) => {
           >
             <div class="flex justify-end gap-2">
               <button
+                type="button"
                 title="Editar"
                 class="cursor-pointer"
                 @click="updateSupplier(supplier)"
@@ -124,6 +125,7 @@ const updateSupplier = (supplier) => {
                 <Edit class="h-4 w-4 text-blue-600" />
               </button>
               <button
+                type="button"
                 title="Excluir"
                 class="cursor-pointer"
                 @click="deleteSupplier(supplier.id)"

@@ -123,6 +123,7 @@ const handleSubmit = async (event) => {
           {{ isEditing ? "Editar Fornecedor" : "Novo Fornecedor" }}
         </h2>
         <button
+          type="button"
           @click="emit('close-form')"
           class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-md transition-colors cursor-pointer"
         >
@@ -315,11 +316,13 @@ const handleSubmit = async (event) => {
 
         <div class="flex justify-end gap-4 pt-6 border-t border-gray-200">
           <button
+            type="button"
             class="px-4 py-2 border border-gray-300 rounded-md bg-transparent hover:bg-gray-50 text-gray-700 cursor-pointer"
           >
             Cancelar
           </button>
           <button
+            type="submit"
             class="px-4 py-2 bg-zinc-800 hover:bg-zinc-900 text-white rounded-md cursor-pointer"
           >
             {{ isEditing ? "Salvar Alterações" : "Cadastrar" }}

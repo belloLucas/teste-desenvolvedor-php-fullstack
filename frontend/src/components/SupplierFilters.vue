@@ -82,6 +82,7 @@ const clearFilters = () => {
 
         <div class="flex items-end">
           <button
+            type="button"
             @click="clearFilters"
             class="w-full px-4 py-2 border border-gray-300 rounded-md bg-transparent hover:bg-gray-50 text-gray-700 font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 cursor-pointer"
           >
