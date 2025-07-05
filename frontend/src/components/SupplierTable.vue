@@ -1,5 +1,9 @@
 <script setup>
 import { Edit, Trash2 } from "lucide-vue-next";
+import { useToasts } from "./toast/useToasts";
+import axios from "axios";
+
+const { addToast } = useToasts();
 
 defineProps({
   suppliers: {
@@ -11,6 +15,27 @@ defineProps({
     default: false,
   },
 });
+
+const emit = defineEmits(["supplier-deleted"]);
+
+const deleteSupplier = async (id) => {
+  try {
+    const response = await axios.delete(
+      `http://localhost:8000/api/suppliers/${id}`
+    );
+
+    if (response.status === 200) {
+      addToast("Fornecedor excluído com sucesso.", "success");
+      emit("supplier-deleted");
+    }
+  } catch (error) {
+    console.error("Erro ao excluir fornecedor:", error);
+    addToast(
+      "Ocorreu um erro ao excluir o fornecedor, tente novamente.",
+      "error"
+    );
+  }
+};
 </script>
 
 <template>
@@ -90,7 +115,11 @@ defineProps({
               <button title="Editar" class="cursor-pointer">
                 <Edit class="h-4 w-4 text-blue-600" />
               </button>
-              <button title="Excluir" class="cursor-pointer">
+              <button
+                title="Excluir"
+                class="cursor-pointer"
+                @click="deleteSupplier(supplier.id)"
+              >
                 <Trash2 class="h-4 w-4 text-red-600" />
               </button>
             </div>

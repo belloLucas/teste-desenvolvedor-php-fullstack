@@ -79,7 +79,11 @@ onMounted(() => {
     </div>
 
     <div class="p-6">
-      <SupplierTable :suppliers="suppliers" :loading="loading" />
+      <SupplierTable
+        :suppliers="suppliers"
+        :loading="loading"
+        @supplier-deleted="fetchSuppliers"
+      />
 
       <Pagination :pagination="pagination" @change-page="fetchSuppliers" />
     </div>
