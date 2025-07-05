@@ -1,5 +1,30 @@
 <script setup>
 import { Search } from "lucide-vue-next";
+import { ref, watch } from "vue";
+
+const emit = defineEmits(["update-filters"]);
+
+const filters = ref({
+  search: "",
+  document_type: "all",
+  sort_by: "name",
+});
+
+watch(
+  filters,
+  (newFilters) => {
+    emit("update-filters", newFilters);
+  },
+  { deep: true }
+);
+
+const clearFilters = () => {
+  filters.value = {
+    search: "",
+    document_type: "all",
+    sort_by: "name",
+  };
+};
 </script>
 
 <template>
@@ -22,6 +47,7 @@ import { Search } from "lucide-vue-next";
               type="text"
               placeholder="Digite para buscar..."
               class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
+              v-model="filters.search"
             />
           </div>
         </div>
@@ -32,6 +58,7 @@ import { Search } from "lucide-vue-next";
           >
           <select
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
+            v-model="filters.document_type"
           >
             <option value="all">Todos</option>
             <option value="cnpj">Pessoa Jurídica</option>
@@ -45,6 +72,7 @@ import { Search } from "lucide-vue-next";
           >
           <select
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
+            v-model="filters.sort_by"
           >
             <option value="name">Nome</option>
             <option value="document">Documento</option>
@@ -54,6 +82,7 @@ import { Search } from "lucide-vue-next";
 
         <div class="flex items-end">
           <button
+            @click="clearFilters"
             class="w-full px-4 py-2 border border-gray-300 rounded-md bg-transparent hover:bg-gray-50 text-gray-700 font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 cursor-pointer"
           >
             Limpar Filtros

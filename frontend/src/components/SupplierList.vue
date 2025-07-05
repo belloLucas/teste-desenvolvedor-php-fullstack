@@ -3,7 +3,14 @@ import SupplierTable from "./SupplierTable.vue";
 import Pagination from "./Pagination.vue";
 import axios from "axios";
 
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
+
+const props = defineProps({
+  filters: {
+    type: Object,
+    default: () => ({}),
+  },
+});
 
 const suppliers = ref([]);
 const pagination = ref({});
@@ -12,7 +19,25 @@ const loading = ref(true);
 const fetchSuppliers = async (url = "http://localhost:8000/api/suppliers") => {
   loading.value = true;
   try {
-    const response = await axios.get(url);
+    const params = new URLSearchParams();
+    if (props.filters.search) {
+      params.append("name", props.filters.search);
+    }
+
+    if (props.filters.document_type && props.filters.document_type !== "all") {
+      params.append("document_type", props.filters.document_type);
+    }
+
+    if (props.filters.sort_by) {
+      params.append("sort_by", props.filters.sort_by);
+    }
+
+    const finalUrl = new URL(url);
+    params.forEach((value, key) => {
+      finalUrl.searchParams.append(key, value);
+    });
+
+    const response = await axios.get(finalUrl.toString());
     suppliers.value = response.data.data;
 
     delete response.data.data;
@@ -23,6 +48,14 @@ const fetchSuppliers = async (url = "http://localhost:8000/api/suppliers") => {
     loading.value = false;
   }
 };
+
+watch(
+  () => props.filters,
+  () => {
+    fetchSuppliers();
+  },
+  { deep: true }
+);
 
 onMounted(() => {
   fetchSuppliers();

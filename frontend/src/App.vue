@@ -10,6 +10,7 @@ import { ref } from "vue";
 
 const showForm = ref(false);
 const showDocSearch = ref(false);
+const activeFilters = ref({});
 
 const openForm = () => {
   showForm.value = true;
@@ -26,6 +27,10 @@ const openDocSearch = () => {
 const closeDocSearch = () => {
   showDocSearch.value = false;
 };
+
+const handleUpdateFilters = (filters) => {
+  activeFilters.value = filters;
+};
 </script>
 
 <template>
@@ -33,8 +38,8 @@ const closeDocSearch = () => {
     <Header @open-form="openForm" @open-doc-search="openDocSearch" />
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <SupplierFilters />
-      <SupplierList />
+      <SupplierFilters @update-filters="handleUpdateFilters" />
+      <SupplierList :filters="activeFilters" />
     </div>
 
     <div
