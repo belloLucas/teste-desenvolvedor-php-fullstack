@@ -85,7 +85,7 @@ const handleSupplierUpdate = () => {
 
     <div
       v-if="showDocSearch"
-      class="fixed inset-0 bg-black bg-black/50 z-40 flex justify-center items-center"
+      class="fixed inset-0 bg-black/50 z-40 flex justify-center items-center p-4"
       @click.self="closeDocSearch"
     >
       <DocSearch @close-doc-search="closeDocSearch" />
