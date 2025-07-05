@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Repositories\SupplierRepository;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class SupplierService
 {
@@ -21,6 +23,17 @@ class SupplierService
     public function getSupplierByDocument(string $documentType, string $documentNumber)
     {
         return $this->supplierRepository->getSupplierByDocument($documentType, $documentNumber);
+    }
+
+    public function fetchCpnj(string $cnpj)
+    {
+        $response = Http::get("https://brasilapi.com.br/api/cnpj/v1/$cnpj");
+
+        if ($response->successful()) {
+            return $response->json();
+        }
+
+        return null;
     }
 
     public function createSupplier(array $data)

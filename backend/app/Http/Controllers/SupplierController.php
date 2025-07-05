@@ -43,7 +43,21 @@ class SupplierController extends Controller
         if ($supplier) {
             return response()->json($supplier);
         }
-        return response()->json(['message' => 'Supplier not'], 404);
+        return response()->json(['message' => 'Supplier not found'], 404);
+    }
+
+    public function fetchCpnj(string $cnpj) {
+        if (!$cnpj) {
+            return response()->json(['message' => 'CNPJ is required'], 400);
+        }
+
+        $supplierData = $this->supplierService->fetchCpnj($cnpj);
+
+        if ($supplierData) {
+            return response()->json($supplierData);
+        }
+
+        return response()->json(['message' => 'CNPJ not found on external API'], 404);
     }
 
     public function store(SupplierRequest $request)
