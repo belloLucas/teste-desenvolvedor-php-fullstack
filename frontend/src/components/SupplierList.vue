@@ -16,6 +16,8 @@ const suppliers = ref([]);
 const pagination = ref({});
 const loading = ref(true);
 
+const emit = defineEmits(["update-supplier"]);
+
 const fetchSuppliers = async (url = "http://localhost:8000/api/suppliers") => {
   loading.value = true;
   try {
@@ -48,6 +50,10 @@ const fetchSuppliers = async (url = "http://localhost:8000/api/suppliers") => {
     loading.value = false;
   }
 };
+
+defineExpose({
+  fetchSuppliers,
+});
 
 watch(
   () => props.filters,
@@ -83,6 +89,7 @@ onMounted(() => {
         :suppliers="suppliers"
         :loading="loading"
         @supplier-deleted="fetchSuppliers"
+        @update-supplier="(supplier) => emit('update-supplier', supplier)"
       />
 
       <Pagination :pagination="pagination" @change-page="fetchSuppliers" />

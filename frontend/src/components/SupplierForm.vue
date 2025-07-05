@@ -1,13 +1,22 @@
 <script setup>
 import { X } from "lucide-vue-next";
-import { ref } from "vue";
+import { ref, onMounted, computed } from "vue";
 import axios from "axios";
 import { z } from "zod";
 import { useToasts } from "./toast/useToasts";
 import { vMaska } from "maska/vue";
 
-const emit = defineEmits(["close-form"]);
+const props = defineProps({
+  supplierData: {
+    type: Object,
+    default: null,
+  },
+});
+
+const emit = defineEmits(["close-form", "supplier-updated"]);
 const { addToast } = useToasts();
+
+const isEditing = computed(() => !!props.supplierData);
 
 const supplier = ref({
   document_type: "",
@@ -24,6 +33,12 @@ const supplier = ref({
 });
 
 const errors = ref({});
+
+onMounted(() => {
+  if (isEditing.value) {
+    supplier.value = { ...props.supplierData };
+  }
+});
 
 const supplierSchema = z.object({
   document_type: z.enum(["CPF", "CNPJ"], {
@@ -67,8 +82,17 @@ const handleSubmit = async (event) => {
   }
 
   try {
-    await axios.post("http://localhost:8000/api/suppliers", result.data);
-    addToast("Fornecedor cadastrado com sucesso!", "success");
+    if (isEditing.value) {
+      await axios.patch(
+        `http://localhost:8000/api/suppliers/${props.supplierData.id}`,
+        result.data
+      );
+      addToast("Fornecedor atualizado com sucesso!", "success");
+    } else {
+      await axios.post("http://localhost:8000/api/suppliers", result.data);
+      addToast("Fornecedor cadastrado com sucesso!", "success");
+    }
+    emit("supplier-updated");
     emit("close-form");
   } catch (error) {
     if (error.response && error.response.status === 422) {
@@ -95,7 +119,9 @@ const handleSubmit = async (event) => {
   <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
     <div class="px-6 py-4 border-b border-gray-200">
       <div class="flex justify-between items-center">
-        <h2 class="text-lg font-semibold text-gray-900">Novo Fornecedor</h2>
+        <h2 class="text-lg font-semibold text-gray-900">
+          {{ isEditing ? "Editar Fornecedor" : "Novo Fornecedor" }}
+        </h2>
         <button
           @click="emit('close-form')"
           class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-md transition-colors cursor-pointer"
@@ -296,7 +322,7 @@ const handleSubmit = async (event) => {
           <button
             class="px-4 py-2 bg-zinc-800 hover:bg-zinc-900 text-white rounded-md cursor-pointer"
           >
-            Cadastrar
+            {{ isEditing ? "Salvar Alterações" : "Cadastrar" }}
           </button>
         </div>
       </form>

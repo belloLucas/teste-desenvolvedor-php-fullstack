@@ -16,7 +16,7 @@ defineProps({
   },
 });
 
-const emit = defineEmits(["supplier-deleted"]);
+const emit = defineEmits(["supplier-deleted", "update-supplier"]);
 
 const deleteSupplier = async (id) => {
   try {
@@ -35,6 +35,10 @@ const deleteSupplier = async (id) => {
       "error"
     );
   }
+};
+
+const updateSupplier = (supplier) => {
+  emit("update-supplier", supplier);
 };
 </script>
 
@@ -112,7 +116,11 @@ const deleteSupplier = async (id) => {
             class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
           >
             <div class="flex justify-end gap-2">
-              <button title="Editar" class="cursor-pointer">
+              <button
+                title="Editar"
+                class="cursor-pointer"
+                @click="updateSupplier(supplier)"
+              >
                 <Edit class="h-4 w-4 text-blue-600" />
               </button>
               <button

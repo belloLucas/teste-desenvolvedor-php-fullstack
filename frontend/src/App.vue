@@ -11,13 +11,30 @@ import { ref } from "vue";
 const showForm = ref(false);
 const showDocSearch = ref(false);
 const activeFilters = ref({});
+const supplierToEdit = ref(null);
+const supplierListRef = ref(null);
 
-const openForm = () => {
+const openForm = (supplier = null) => {
+  if (supplier) {
+    supplierToEdit.value = {
+      ...supplier,
+      address: {
+        street: supplier.address,
+        house_number: supplier.house_number,
+        neighborhood: supplier.neighborhood,
+        city: supplier.city,
+        state: supplier.uf,
+      },
+    };
+  } else {
+    supplierToEdit.value = null;
+  }
   showForm.value = true;
 };
 
 const closeForm = () => {
   showForm.value = false;
+  supplierToEdit.value = null;
 };
 
 const openDocSearch = () => {
@@ -31,6 +48,12 @@ const closeDocSearch = () => {
 const handleUpdateFilters = (filters) => {
   activeFilters.value = filters;
 };
+
+const handleSupplierUpdate = () => {
+  if (supplierListRef.value) {
+    supplierListRef.value.fetchSuppliers();
+  }
+};
 </script>
 
 <template>
@@ -39,7 +62,11 @@ const handleUpdateFilters = (filters) => {
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <SupplierFilters @update-filters="handleUpdateFilters" />
-      <SupplierList :filters="activeFilters" />
+      <SupplierList
+        :filters="activeFilters"
+        @update-supplier="openForm"
+        ref="supplierListRef"
+      />
     </div>
 
     <div
@@ -48,7 +75,11 @@ const handleUpdateFilters = (filters) => {
       @click.self="closeForm"
     >
       <div class="w-full max-w-3xl max-h-[90vh] overflow-y-auto">
-        <SupplierForm @close-form="closeForm" />
+        <SupplierForm
+          @close-form="closeForm"
+          :supplier-data="supplierToEdit"
+          @supplier-updated="handleSupplierUpdate"
+        />
       </div>
     </div>
 
