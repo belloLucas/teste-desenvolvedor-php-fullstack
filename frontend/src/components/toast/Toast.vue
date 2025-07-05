@@ -1,7 +1,6 @@
 <script setup>
 import { useToasts } from "./useToasts";
-import { CheckCircle, XCircle, AlertTriangle } from "lucide-vue-next";
-import { computed } from "vue";
+import { CheckCircle, XCircle, AlertTriangle, X } from "lucide-vue-next";
 
 const { toasts, removeToast } = useToasts();
 
