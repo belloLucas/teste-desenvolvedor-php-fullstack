@@ -160,3 +160,18 @@ it('should filter suppliers by document type', function () {
     $response->assertJsonCount(1, 'data');
     $response->assertJsonFragment(['document_type' => 'CPF']);
 });
+
+it('should fetch CNPJ data from external API', function () {
+    $cnpj = '23811568000198';
+
+    $response = $this->getJson("/api/suppliers/fetch-cnpj/$cnpj");
+
+    $response->assertStatus(200);
+    $response->assertJsonStructure([
+        'cnpj',
+        'razao_social',
+        'nome_fantasia',
+        'logradouro',
+        'porte',
+    ]);
+});
