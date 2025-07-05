@@ -1,7 +1,37 @@
 <script setup>
 import { X } from "lucide-vue-next";
+import { ref } from "vue";
+import axios from "axios";
+import { useToasts } from "./toast/useToasts";
 
 const emit = defineEmits(["close-form"]);
+const { addToast } = useToasts();
+
+const supplier = ref({
+  document_type: "",
+  document_number: "",
+  name: "",
+  phone: "",
+  address: {
+    street: "",
+    house_number: "",
+    neighborhood: "",
+    city: "",
+    state: "",
+  },
+});
+
+const handleSubmit = async (event) => {
+  event.preventDefault();
+  try {
+    await axios.post("http://localhost:8000/api/suppliers", supplier.value);
+    addToast("Fornecedor cadastrado com sucesso!", "success");
+    emit("close-form");
+  } catch (error) {
+    console.error("Erro ao cadastrar fornecedor:", error);
+    addToast("Erro ao cadastrar fornecedor. Tente novamente.", "error");
+  }
+};
 </script>
 
 <template>
@@ -19,7 +49,7 @@ const emit = defineEmits(["close-form"]);
     </div>
 
     <div class="p-6">
-      <form class="space-y-6">
+      <form class="space-y-6" @submit="handleSubmit">
         <div>
           <label class="block text-base font-medium text-gray-700 mb-2"
             >Tipo de Documento</label
@@ -30,9 +60,11 @@ const emit = defineEmits(["close-form"]);
             >
               <input
                 type="radio"
-                name="documentType"
-                value="cnpj"
+                name="document_type"
+                value="CNPJ"
                 class="form-radio h-4 w-4 text-blue-600"
+                v-model="supplier.document_type"
+                required
               />
               <span>Pessoa Jurídica (CNPJ)</span>
             </label>
@@ -41,9 +73,11 @@ const emit = defineEmits(["close-form"]);
             >
               <input
                 type="radio"
-                name="documentType"
-                value="cpf"
+                name="document_type"
+                value="CPF"
                 class="form-radio h-4 w-4 text-blue-600"
+                v-model="supplier.document_type"
+                required
               />
               <span>Pessoa Física (CPF)</span>
             </label>
@@ -58,6 +92,8 @@ const emit = defineEmits(["close-form"]);
             <input
               type="text"
               class="w-full px-3 py-2 border border-gray-300 rounded-md"
+              v-model="supplier.document_number"
+              required
             />
           </div>
 
@@ -68,6 +104,8 @@ const emit = defineEmits(["close-form"]);
             <input
               type="text"
               class="w-full px-3 py-2 border border-gray-300 rounded-md"
+              v-model="supplier.name"
+              required
             />
           </div>
         </div>
@@ -80,6 +118,8 @@ const emit = defineEmits(["close-form"]);
             <input
               type="tel"
               class="w-full px-3 py-2 border border-gray-300 rounded-md"
+              v-model="supplier.phone"
+              required
             />
           </div>
         </div>
@@ -94,6 +134,8 @@ const emit = defineEmits(["close-form"]);
               <input
                 type="text"
                 class="w-full px-3 py-2 border border-gray-300 rounded-md"
+                v-model="supplier.address.street"
+                required
               />
             </div>
             <div class="md:col-span-2">
@@ -103,6 +145,8 @@ const emit = defineEmits(["close-form"]);
               <input
                 type="text"
                 class="w-full px-3 py-2 border border-gray-300 rounded-md"
+                v-model="supplier.address.house_number"
+                required
               />
             </div>
             <div class="md:col-span-3">
@@ -112,6 +156,8 @@ const emit = defineEmits(["close-form"]);
               <input
                 type="text"
                 class="w-full px-3 py-2 border border-gray-300 rounded-md"
+                v-model="supplier.address.neighborhood"
+                required
               />
             </div>
             <div class="md:col-span-2">
@@ -121,6 +167,8 @@ const emit = defineEmits(["close-form"]);
               <input
                 type="text"
                 class="w-full px-3 py-2 border border-gray-300 rounded-md"
+                v-model="supplier.address.city"
+                required
               />
             </div>
             <div class="md:col-span-1">
@@ -130,6 +178,8 @@ const emit = defineEmits(["close-form"]);
               <input
                 type="text"
                 class="w-full px-3 py-2 border border-gray-300 rounded-md"
+                v-model="supplier.address.state"
+                required
               />
             </div>
           </div>
