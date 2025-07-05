@@ -1,7 +1,7 @@
 <script setup>
-import { Users, Plus } from "lucide-vue-next";
+import { Users, Plus, Search } from "lucide-vue-next";
 
-const emit = defineEmits(["open-form"]);
+const emit = defineEmits(["open-form", "open-doc-search"]);
 </script>
 
 <template>
@@ -14,13 +14,22 @@ const emit = defineEmits(["open-form"]);
             Gestão de Fornecedores
           </h1>
         </div>
-        <button
-          @click="emit('open-form')"
-          class="flex items-center gap-2 bg-zinc-800 hover:bg-zinc-900 text-white px-4 py-2 rounded-md transition-colors cursor-pointer"
-        >
-          <Plus class="h-4 w-4" />
-          Novo Fornecedor
-        </button>
+        <div class="flex items-center gap-4">
+          <button
+            @click="emit('open-doc-search')"
+            class="flex items-center gap-2 bg-white-600 hover:bg-gray-100 border border-gray-200 text-zing-800 px-4 py-2 rounded-md transition-colors cursor-pointer"
+          >
+            <Search class="h-4 w-4" />
+            Buscar CNPJ
+          </button>
+          <button
+            @click="emit('open-form')"
+            class="flex items-center gap-2 bg-zinc-800 hover:bg-zinc-900 text-white px-4 py-2 rounded-md transition-colors cursor-pointer"
+          >
+            <Plus class="h-4 w-4" />
+            Novo Fornecedor
+          </button>
+        </div>
       </div>
     </div>
   </header>
