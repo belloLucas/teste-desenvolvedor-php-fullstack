@@ -29,9 +29,15 @@ const supplierSchema = z.object({
   document_type: z.enum(["CPF", "CNPJ"], {
     errorMap: () => ({ message: "Selecione um tipo de documento." }),
   }),
-  document_number: z.string().min(1, "O número do documento é obrigatório."),
+  document_number: z
+    .string()
+    .min(1, "O número do documento é obrigatório.")
+    .transform((val) => val.replace(/\D/g, "")),
   name: z.string().min(3, "O nome deve ter pelo menos 3 caracteres."),
-  phone: z.string().min(10, "O telefone parece curto demais."),
+  phone: z
+    .string()
+    .min(10, "O telefone parece curto demais.")
+    .transform((val) => val.replace(/\D/g, "")),
   address: z.object({
     street: z.string().min(1, "A rua é obrigatória."),
     house_number: z.string().min(1, "O número é obrigatório."),
