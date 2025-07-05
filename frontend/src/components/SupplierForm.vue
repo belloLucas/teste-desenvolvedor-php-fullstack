@@ -315,6 +315,7 @@ const handleSubmit = async (event) => {
         <div class="flex justify-end gap-4 pt-6 border-t border-gray-200">
           <button
             type="button"
+            @click="emit('close-form')"
             class="px-4 py-2 border border-gray-300 rounded-md bg-transparent hover:bg-gray-50 text-gray-700 cursor-pointer"
           >
             Cancelar
