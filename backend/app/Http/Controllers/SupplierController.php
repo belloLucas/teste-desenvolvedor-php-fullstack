@@ -15,7 +15,9 @@ class SupplierController extends Controller
     public function index(Request $request)
     {
         $perPage = $request->input('per_page', 5);
-        $suppliers = $this->supplierService->getAllSuppliers($perPage);
+        $filters = $request->only(['name', 'document_type', 'document_number']);
+
+        $suppliers = $this->supplierService->getAllSuppliers($perPage, $filters);
         return response()->json($suppliers);
     }
 

@@ -8,9 +8,23 @@ class SupplierRepository
 {
     public function __construct(protected Supplier $supplier) {}
 
-    public function getAllSuppliers(int $perPage = 5)
+    public function getAllSuppliers(int $perPage = 5, array $filters = [])
     {
-        return $this->supplier->paginate($perPage);
+        $query = $this->supplier->query();
+
+        if (isset($filters['name'])) {
+            $query->where('name', 'like', '%' . $filters['name'] . '%');
+        }
+
+        if (isset($filters['document_type'])) {
+            $query->where('document_type', $filters['document_type']);
+        }
+
+        if (isset($filters['document_number'])) {
+            $query->where('document_number', $filters['document_number']);
+        }
+
+        return $query->paginate($perPage);
     }
 
     public function getSupplierById($id)
