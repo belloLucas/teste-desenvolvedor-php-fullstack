@@ -1,5 +1,16 @@
 <script setup>
 import { Edit, Trash2 } from "lucide-vue-next";
+
+defineProps({
+  suppliers: {
+    type: Array,
+    default: () => [],
+  },
+  loading: {
+    type: Boolean,
+    default: false,
+  },
+});
 </script>
 
 <template>
@@ -35,29 +46,42 @@ import { Edit, Trash2 } from "lucide-vue-next";
         </tr>
       </thead>
       <tbody class="bg-white divide-y divide-gray-200">
-        <tr class="hover:bg-gray-50">
+        <tr v-if="loading">
+          <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+            Carregando fornecedores...
+          </td>
+        </tr>
+        <tr v-else-if="!suppliers.length">
+          <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+            Nenhum fornecedor encontrado.
+          </td>
+        </tr>
+        <tr
+          v-else
+          v-for="supplier in suppliers"
+          :key="supplier.id"
+          class="hover:bg-gray-50"
+        >
           <td class="px-6 py-4 whitespace-nowrap">
-            <div>
-              <div class="text-sm font-medium text-gray-900">
-                Nome do Fornecedor
-              </div>
-              <div class="text-sm text-gray-500">Nome Fantasia</div>
+            <div class="text-sm font-medium text-gray-900">
+              {{ supplier.name }}
             </div>
           </td>
           <td class="px-6 py-4 whitespace-nowrap">
-            <div class="text-sm text-gray-900">00.000.000/0000-00</div>
+            <div class="text-sm text-gray-900">
+              {{ supplier.document_number }}
+            </div>
             <span
               class="inline-flex px-2 py-1 text-xs font-medium rounded-md border border-gray-300 text-gray-700 bg-white"
             >
-              CNPJ
+              {{ supplier.document_type }}
             </span>
           </td>
           <td class="px-6 py-4 whitespace-nowrap">
-            <div class="text-sm text-gray-900">fornecedor@email.com</div>
-            <div class="text-sm text-gray-500">(00) 00000-0000</div>
+            <div class="text-sm text-gray-500">{{ supplier.phone }}</div>
           </td>
           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-            Cidade/UF
+            {{ supplier.city }}/{{ supplier.uf }}
           </td>
           <td
             class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"

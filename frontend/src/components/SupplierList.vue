@@ -1,6 +1,32 @@
 <script setup>
 import SupplierTable from "./SupplierTable.vue";
 import Pagination from "./Pagination.vue";
+import axios from "axios";
+
+import { onMounted, ref } from "vue";
+
+const suppliers = ref([]);
+const pagination = ref({});
+const loading = ref(true);
+
+const fetchSuppliers = async (url = "http://localhost:8000/api/suppliers") => {
+  loading.value = true;
+  try {
+    const response = await axios.get(url);
+    suppliers.value = response.data.data;
+
+    delete response.data.data;
+    pagination.value = response.data;
+  } catch (error) {
+    console.error("Erro ao buscar fornecedores:", error);
+  } finally {
+    loading.value = false;
+  }
+};
+
+onMounted(() => {
+  fetchSuppliers();
+});
 </script>
 
 <template>
@@ -11,17 +37,18 @@ import Pagination from "./Pagination.vue";
           Fornecedores Cadastrados
         </h2>
         <span
+          v-if="pagination.total"
           class="inline-flex px-3 py-1 text-sm font-medium rounded-full bg-gray-100 text-gray-800"
         >
-          10 fornecedores
+          {{ pagination.total }} fornecedores
         </span>
       </div>
     </div>
 
     <div class="p-6">
-      <SupplierTable />
+      <SupplierTable :suppliers="suppliers" :loading="loading" />
 
-      <Pagination />
+      <Pagination :pagination="pagination" @change-page="fetchSuppliers" />
     </div>
   </div>
 </template>
