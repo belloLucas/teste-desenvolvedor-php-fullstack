@@ -65,8 +65,22 @@ const handleSubmit = async (event) => {
     addToast("Fornecedor cadastrado com sucesso!", "success");
     emit("close-form");
   } catch (error) {
-    console.error("Erro ao cadastrar fornecedor:", error);
-    addToast("Erro ao cadastrar fornecedor. Tente novamente.", "error");
+    if (error.response && error.response.status === 422) {
+      const backendErrors = error.response.data.errors;
+      if (backendErrors) {
+        for (const field in backendErrors) {
+          errors.value[field] = backendErrors[field][0];
+        }
+      }
+      addToast(
+        error.response.data.message ||
+          "Verifique os dados informados e tente novamente.",
+        "error"
+      );
+    } else {
+      console.error("Erro ao cadastrar fornecedor:", error);
+      addToast("Erro ao cadastrar fornecedor. Tente novamente.", "error");
+    }
   }
 };
 </script>
