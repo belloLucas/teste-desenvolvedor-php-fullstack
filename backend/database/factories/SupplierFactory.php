@@ -19,7 +19,11 @@ class SupplierFactory extends Factory
         return [
             'name' => fake()->company(),
             'phone' => fake()->phoneNumber(),
-            'address' => fake()->address(),
+            'address' => fake()->streetName(),
+            'house_number' => fake()->buildingNumber(),
+            'neighborhood' => fake()->citySuffix(),
+            'city' => fake()->city(),
+            'uf' => fake()->stateAbbr(),
             'document_type' => fake()->randomElement(['CNPJ', 'CPF']),
             'document_number' => fake()->numerify('###########'),
         ];

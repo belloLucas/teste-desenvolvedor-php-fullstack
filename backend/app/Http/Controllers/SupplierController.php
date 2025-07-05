@@ -63,6 +63,14 @@ class SupplierController extends Controller
     public function store(SupplierRequest $request)
     {
         $data = $request->validated();
+        if (isset($data['address'])) {
+            $address = $data['address'];
+            $data['address'] = $address['street'] ?? null;
+            $data['house_number'] = $address['house_number'] ?? null;
+            $data['neighborhood'] = $address['neighborhood'] ?? null;
+            $data['city'] = $address['city'] ?? null;
+            $data['uf'] = $address['state'] ?? null;
+        }
         $supplier = $this->supplierService->createSupplier($data);
         return response()->json($supplier, 201);
     }
@@ -70,6 +78,13 @@ class SupplierController extends Controller
     public function update(UpdateSupplierRequest $request, $id)
     {
         $data = $request->validated();
+        if (isset($data['address'])) {
+            $data['address'] = $data['address']['street'] ?? null;
+            $data['house_number'] = $data['address']['house_number'] ?? null;
+            $data['neighborhood'] = $data['address']['neighborhood'] ?? null;
+            $data['city'] = $data['address']['city'] ?? null;
+            $data['uf'] = $data['address']['state'] ?? null;
+        }
         $supplier = $this->supplierService->updateSupplier($id, $data);
         if ($supplier) {
             return response()->json($supplier);

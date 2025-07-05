@@ -14,6 +14,10 @@ class Supplier extends Model
         'name',
         'phone',
         'address',
+        'house_number',
+        'neighborhood',
+        'city',
+        'uf',
         'document_type',
         'document_number',
     ];

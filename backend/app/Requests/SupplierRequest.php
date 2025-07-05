@@ -28,7 +28,12 @@ class SupplierRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
-            'address' => 'required|string|max:255',
+            'address' => 'required|array',
+            'address.street' => 'required|string|max:255',
+            'address.house_number' => 'required|string|max:20',
+            'address.neighborhood' => 'required|string|max:255',
+            'address.city' => 'required|string|max:255',
+            'address.state' => 'required|string|size:2',
             'document_type' => ['required', 'string', Rule::in(['CPF', 'CNPJ'])],
             'document_number' => $documentRule,
         ];

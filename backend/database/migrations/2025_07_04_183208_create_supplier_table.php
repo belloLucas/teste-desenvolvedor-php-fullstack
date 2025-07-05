@@ -16,6 +16,10 @@ return new class extends Migration
             $table->string('name');
             $table->string('phone');
             $table->string('address');
+            $table->string('house_number');
+            $table->string('neighborhood');
+            $table->string('city');
+            $table->string('uf', 2);
             $table->string('document_type');
             $table->string('document_number');
             $table->timestamps();
@@ -27,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('supplier');
+        Schema::dropIfExists('suppliers');
     }
 };

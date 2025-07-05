@@ -28,7 +28,12 @@ class UpdateSupplierRequest extends FormRequest
         return [
             'name' => 'sometimes|required|string|max:255',
             'phone' => 'sometimes|required|string|max:20',
-            'address' => 'sometimes|required|string|max:255',
+            'address' => 'sometimes|required|array',
+            'address.street' => 'sometimes|required|string|max:255',
+            'address.house_number' => 'sometimes|required|string|max:20',
+            'address.neighborhood' => 'sometimes|required|string|max:255',
+            'address.city' => 'sometimes|required|string|max:255',
+            'address.state' => 'sometimes|required|string|size:2',
             'document_type' => ['sometimes', 'required', 'string', Rule::in(['CPF', 'CNPJ'])],
             'document_number' => $documentRule,
         ];
