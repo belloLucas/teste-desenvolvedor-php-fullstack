@@ -2,7 +2,9 @@
 import { X } from "lucide-vue-next";
 import { ref } from "vue";
 import axios from "axios";
+import { z } from "zod";
 import { useToasts } from "./toast/useToasts";
+import { vMaska } from "maska/vue";
 
 const emit = defineEmits(["close-form"]);
 const { addToast } = useToasts();
@@ -21,10 +23,45 @@ const supplier = ref({
   },
 });
 
+const errors = ref({});
+
+const supplierSchema = z.object({
+  document_type: z.enum(["CPF", "CNPJ"], {
+    errorMap: () => ({ message: "Selecione um tipo de documento." }),
+  }),
+  document_number: z.string().min(1, "O número do documento é obrigatório."),
+  name: z.string().min(3, "O nome deve ter pelo menos 3 caracteres."),
+  phone: z.string().min(10, "O telefone parece curto demais."),
+  address: z.object({
+    street: z.string().min(1, "A rua é obrigatória."),
+    house_number: z.string().min(1, "O número é obrigatório."),
+    neighborhood: z.string().min(1, "O bairro é obrigatório."),
+    city: z.string().min(1, "A cidade é obrigatória."),
+    state: z
+      .string()
+      .min(2, "O estado (UF) deve ter 2 caracteres.")
+      .max(2, "O estado (UF) deve ter no máximo 2 caracteres."),
+  }),
+});
+
 const handleSubmit = async (event) => {
   event.preventDefault();
+  errors.value = {};
+
+  const result = supplierSchema.safeParse(supplier.value);
+
+  if (!result.success) {
+    const fieldErrors = {};
+    for (const issue of result.error.issues) {
+      fieldErrors[issue.path.join(".")] = issue.message;
+    }
+    errors.value = fieldErrors;
+    addToast("Por favor, corrija os erros no formulário.", "error");
+    return;
+  }
+
   try {
-    await axios.post("http://localhost:8000/api/suppliers", supplier.value);
+    await axios.post("http://localhost:8000/api/suppliers", result.data);
     addToast("Fornecedor cadastrado com sucesso!", "success");
     emit("close-form");
   } catch (error) {
@@ -93,8 +130,14 @@ const handleSubmit = async (event) => {
               type="text"
               class="w-full px-3 py-2 border border-gray-300 rounded-md"
               v-model="supplier.document_number"
+              v-maska
+              data-maska="['##.###.###/####-##', '###.###.###-##']"
+              placeholder="00.000.000/0000-00 ou 000.000.000-00"
               required
             />
+            <p v-if="errors.document_number" class="text-red-500 text-xs mt-1">
+              {{ errors.document_number }}
+            </p>
           </div>
 
           <div>
@@ -107,6 +150,9 @@ const handleSubmit = async (event) => {
               v-model="supplier.name"
               required
             />
+            <p v-if="errors.name" class="text-red-500 text-xs mt-1">
+              {{ errors.name }}
+            </p>
           </div>
         </div>
 
@@ -119,8 +165,14 @@ const handleSubmit = async (event) => {
               type="tel"
               class="w-full px-3 py-2 border border-gray-300 rounded-md"
               v-model="supplier.phone"
+              v-maska
+              data-maska="['(##) ####-####', '(##) #####-####']"
+              placeholder="(99) 99999-9999"
               required
             />
+            <p v-if="errors.phone" class="text-red-500 text-xs mt-1">
+              {{ errors.phone }}
+            </p>
           </div>
         </div>
 
@@ -137,6 +189,12 @@ const handleSubmit = async (event) => {
                 v-model="supplier.address.street"
                 required
               />
+              <p
+                v-if="errors['address.street']"
+                class="text-red-500 text-xs mt-1"
+              >
+                {{ errors["address.street"] }}
+              </p>
             </div>
             <div class="md:col-span-2">
               <label class="block text-sm font-medium text-gray-700 mb-1"
@@ -148,6 +206,12 @@ const handleSubmit = async (event) => {
                 v-model="supplier.address.house_number"
                 required
               />
+              <p
+                v-if="errors['address.house_number']"
+                class="text-red-500 text-xs mt-1"
+              >
+                {{ errors["address.house_number"] }}
+              </p>
             </div>
             <div class="md:col-span-3">
               <label class="block text-sm font-medium text-gray-700 mb-1"
@@ -159,6 +223,12 @@ const handleSubmit = async (event) => {
                 v-model="supplier.address.neighborhood"
                 required
               />
+              <p
+                v-if="errors['address.neighborhood']"
+                class="text-red-500 text-xs mt-1"
+              >
+                {{ errors["address.neighborhood"] }}
+              </p>
             </div>
             <div class="md:col-span-2">
               <label class="block text-sm font-medium text-gray-700 mb-1"
@@ -170,6 +240,12 @@ const handleSubmit = async (event) => {
                 v-model="supplier.address.city"
                 required
               />
+              <p
+                v-if="errors['address.city']"
+                class="text-red-500 text-xs mt-1"
+              >
+                {{ errors["address.city"] }}
+              </p>
             </div>
             <div class="md:col-span-1">
               <label class="block text-sm font-medium text-gray-700 mb-1"
@@ -181,6 +257,12 @@ const handleSubmit = async (event) => {
                 v-model="supplier.address.state"
                 required
               />
+              <p
+                v-if="errors['address.state']"
+                class="text-red-500 text-xs mt-1"
+              >
+                {{ errors["address.state"] }}
+              </p>
             </div>
           </div>
         </div>
