@@ -16,8 +16,9 @@ class SupplierController extends Controller
     {
         $perPage = $request->input('per_page', 5);
         $filters = $request->only(['name', 'document_type', 'document_number']);
+        $sortBy = $request->input('sort_by');
 
-        $suppliers = $this->supplierService->getAllSuppliers($perPage, $filters);
+        $suppliers = $this->supplierService->getAllSuppliers($perPage, $filters, $sortBy);
         return response()->json($suppliers);
     }
 

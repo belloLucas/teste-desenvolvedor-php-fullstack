@@ -10,9 +10,9 @@ class SupplierService
 {
     public function __construct(protected SupplierRepository $supplierRepository) {}
 
-    public function getAllSuppliers(int $perPage = 5, array $filters = [])
+    public function getAllSuppliers(int $perPage = 5, array $filters = [], ?string $sortBy = null)
     {
-        return $this->supplierRepository->getAllSuppliers($perPage, $filters);
+        return $this->supplierRepository->getAllSuppliers($perPage, $filters, $sortBy);
     }
 
     public function getSupplierById($id)

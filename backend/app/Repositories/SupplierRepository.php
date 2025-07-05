@@ -8,7 +8,7 @@ class SupplierRepository
 {
     public function __construct(protected Supplier $supplier) {}
 
-    public function getAllSuppliers(int $perPage = 5, array $filters = [])
+    public function getAllSuppliers(int $perPage = 5, array $filters = [], ?string $sortBy = null)
     {
         $query = $this->supplier->query();
 
@@ -22,6 +22,20 @@ class SupplierRepository
 
         if (isset($filters['document_number'])) {
             $query->where('document_number', $filters['document_number']);
+        }
+
+        if ($sortBy) {
+            $sortMap = [
+                'name' => 'name',
+                'document_type' => 'document_type',
+                'createdAt' => 'created_at',
+            ];
+
+            if (array_key_exists($sortBy, $sortMap)) {
+                $column = $sortMap[$sortBy];
+                $direction = $sortBy === 'createdAt' ? 'desc' : 'asc';
+                $query->orderBy($column, $direction);
+            }
         }
 
         return $query->paginate($perPage);
