@@ -132,12 +132,7 @@ const emit = defineEmits(["close-doc-search"]);
           @click="emit('close-doc-search')"
           class="px-4 py-2 border border-gray-300 rounded-md bg-transparent hover:bg-gray-50 text-gray-700 cursor-pointer"
         >
-          Cancelar
-        </button>
-        <button
-          class="px-4 py-2 bg-zinc-800 hover:bg-zinc-900 text-white rounded-md cursor-pointer"
-        >
-          Usar Dados
+          Fechar
         </button>
       </div>
     </div>
