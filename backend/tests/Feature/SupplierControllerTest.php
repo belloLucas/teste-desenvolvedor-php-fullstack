@@ -82,3 +82,28 @@ it('should return 404 when trying to find a non-existent supplier', function () 
 
     $response->assertStatus(404);
 });
+
+it('should show a single supplier by document', function () {
+    $supplier = Supplier::factory()->create([
+        'document_type' => 'CNPJ',
+        'document_number' => '33406775000109',
+    ]);
+
+    $response = $this->getJson('/api/suppliers/document?document_type=CNPJ&document_number=33406775000109');
+
+    $response->assertStatus(200);
+    $response->assertJsonFragment(['id' => $supplier->id]);
+});
+
+it('should return 404 when trying to find a supplier by a non-existent document', function () {
+    $response = $this->getJson('/api/suppliers/document?document_type=CNPJ&document_number=99999999000199');
+
+    $response->assertStatus(404);
+});
+
+it('should return 400 when document type or number are missing for document search', function () {
+    $response = $this->getJson('/api/suppliers/document?document_type=CNPJ');
+
+    $response->assertStatus(400);
+    $response->assertJson(['message' => 'Document type and number are required']);
+});
