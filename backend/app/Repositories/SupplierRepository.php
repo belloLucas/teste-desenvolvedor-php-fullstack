@@ -8,9 +8,9 @@ class SupplierRepository
 {
     public function __construct(protected Supplier $supplier) {}
 
-    public function getAllSuppliers()
+    public function getAllSuppliers(int $perPage = 5)
     {
-        return $this->supplier->all();
+        return $this->supplier->paginate($perPage);
     }
 
     public function getSupplierById($id)

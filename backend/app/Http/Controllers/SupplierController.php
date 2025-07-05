@@ -12,9 +12,10 @@ class SupplierController extends Controller
 {
     public function __construct(protected SupplierService $supplierService) {}
 
-    public function index()
+    public function index(Request $request)
     {
-        $suppliers = $this->supplierService->getAllSuppliers();
+        $perPage = $request->input('per_page', 5);
+        $suppliers = $this->supplierService->getAllSuppliers($perPage);
         return response()->json($suppliers);
     }
 
