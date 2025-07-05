@@ -4,6 +4,7 @@ import SupplierFilters from "./components/SupplierFilters.vue";
 import SupplierList from "./components/SupplierList.vue";
 import SupplierForm from "./components/SupplierForm.vue";
 import DocSearch from "./components/DocSearch.vue";
+import Toast from "./components/toast/Toast.vue";
 
 import { ref } from "vue";
 
@@ -53,6 +54,8 @@ const closeDocSearch = () => {
     >
       <DocSearch @close-doc-search="closeDocSearch" />
     </div>
+
+    <Toast />
   </main>
 </template>
 
