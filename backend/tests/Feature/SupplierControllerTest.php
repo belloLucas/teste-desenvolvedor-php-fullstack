@@ -21,9 +21,15 @@ it('should create a new supplier', function () {
     $supplierData = [
         'name' => 'New Supplier',
         'phone' => '11987654321',
-        'address' => '123 Main St',
+        'address' => [
+            'street' => 'Rua Principal',
+            'house_number' => '123',
+            'neighborhood' => 'Centro',
+            'city' => 'São Paulo',
+            'state' => 'SP',
+        ],
         'document_type' => 'CNPJ',
-        'document_number' => '24706035000109',
+        'document_number' => '75574868000102',
     ];
 
     $response = $this->postJson('/api/suppliers', $supplierData);
