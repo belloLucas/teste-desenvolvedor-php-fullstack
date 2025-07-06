@@ -242,11 +242,13 @@ Cria um novo fornecedor.
     {
         "name": "Novo Fornecedor",
         "phone": "11987654321",
-        "address": "Rua Nova",
-        "house_number": "456",
-        "neighborhood": "Bairro Novo",
-        "city": "Rio de Janeiro",
-        "uf": "RJ",
+        "address": {
+            "street": "Rua Nova",
+            "house_number": "456",
+            "neighborhood": "Bairro Novo",
+            "city": "Rio de Janeiro",
+            "state": "RJ"
+        },
         "document_type": "CPF",
         "document_number": "12345678901"
     }
