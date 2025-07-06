@@ -20,8 +20,6 @@ RUN composer install --no-interaction --no-plugins --no-scripts --prefer-dist
 
 COPY . .
 
-RUN composer install --no-interaction --no-plugins
-
 RUN chown -R www-data:www-data storage bootstrap/cache
 RUN chmod -R 775 storage bootstrap/cache
 
