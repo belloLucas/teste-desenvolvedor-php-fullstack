@@ -9,7 +9,8 @@ Este é um projeto de teste para a StartGov que consiste em uma plataforma para 
 O projeto é construído com as seguintes tecnologias:
 
 - **Backend**:
-  - PHP / Laravel
+  - PHP 8.3
+  - Laravel 12.0
   - MySQL
   - Pest (Testes Automatizados)
 - **Frontend**:
@@ -22,6 +23,65 @@ O projeto é construído com as seguintes tecnologias:
 - **Ambiente de Desenvolvimento**:
   - Docker
   - Docker Compose
+
+## Funcionalidades
+
+A plataforma permite o gerenciamento completo de fornecedores, incluindo as seguintes operações:
+
+- **Cadastro de Fornecedores**: Adicionar novos fornecedores com informações como CNPJ, nome, e-mail, telefone e endereço.
+- **Listagem de Fornecedores**: Visualizar todos os fornecedores cadastrados em uma tabela.
+- **Edição de Fornecedores**: Atualizar as informações de um fornecedor existente.
+- **Exclusão de Fornecedores**: Remover um fornecedor do sistema.
+- **Validação de Dados**: Validação dos dados de entrada tanto no frontend quanto no backend para garantir a consistência.
+- **Filtragem de Fornecedores**: Filtre entre os fornecedores por nome, tipo de documento, data de criação
+
+## Esquema do Banco de Dados
+
+A aplicação utiliza uma tabela principal, `suppliers`, para armazenar as informações dos fornecedores. A estrutura da tabela, conforme a migration, é a seguinte:
+
+**Tabela: `suppliers`**
+
+| Coluna            | Tipo                      | Descrição                               |
+|-------------------|---------------------------|-----------------------------------------|
+| `id`              | `BIGINT UNSIGNED AUTO_INCREMENT` | Chave primária.                         |
+| `name`            | `VARCHAR(255)`            | Nome do fornecedor.                     |
+| `phone`           | `VARCHAR(255)`            | Telefone único do fornecedor.           |
+| `address`         | `VARCHAR(255)`            | Endereço (Rua/Avenida).                 |
+| `house_number`    | `VARCHAR(255)`            | Número do endereço.                     |
+| `neighborhood`    | `VARCHAR(255)`            | Bairro.                                 |
+| `city`            | `VARCHAR(255)`            | Cidade.                                 |
+| `uf`              | `VARCHAR(2)`              | Estado (UF).                            |
+| `document_type`   | `VARCHAR(255)`            | Tipo de documento (CNPJ ou CPF).        |
+| `document_number` | `VARCHAR(255)`            | Número do documento único.              |
+| `created_at`      | `TIMESTAMP`               | Data de criação do registro.            |
+| `updated_at`      | `TIMESTAMP`               | Data da última atualização do registro. |
+
+## Estrutura do Projeto
+
+O projeto é organizado em uma arquitetura monorepo, com o backend e o frontend em diretórios separados para maior clareza e manutenibilidade.
+
+```
+/
+├── backend/                # Aplicação Backend (Laravel)
+│   ├── app/
+│   ├── config/
+│   ├── database/
+│   ├── routes/
+│   ├── tests/              # Testes automatizados (Pest)
+│   ├── composer.json
+│   └── Dockerfile
+│
+├── frontend/               # Aplicação Frontend (Vue.js)
+│   ├── src/
+│   │   ├── components/
+│   │   └── services/
+│   │
+│   ├── package.json
+│   └── Dockerfile
+│
+├── docker-compose.yml      # Orquestração dos contêineres
+└── README.md               # Documentação do projeto
+```
 
 ## Pré-requisitos
 
@@ -43,16 +103,18 @@ Siga os passos abaixo para configurar e executar o ambiente de desenvolvimento.
 
 2.  **Configurar Variáveis de Ambiente:**
 
-    Copie os arquivos de exemplo `.env.example` para criar seus próprios arquivos `.env`.
+    Copie os arquivos de exemplo `.env.example` para criar seus próprios arquivos `.env` para o backend e para o frontend.
 
     Para o backend:
-
     ```sh
     cp backend/.env.example backend/.env
     ```
 
     Para o frontend:
-    O arquivo [frontend/.env](frontend/.env) já deve estar configurado, mas certifique-se de que `VITE_API_URL` aponta para o endereço do seu backend (`http://localhost:8000/api`).
+    ```sh
+    cp frontend/.env.example frontend/.env
+    ```
+    Após copiar, verifique se a variável `VITE_API_URL` no arquivo `frontend/.env` aponta para o endereço correto da sua API do backend (o padrão é `http://localhost:8000/api`).
 
 3.  **Subir os contêineres com Docker Compose:**
 
