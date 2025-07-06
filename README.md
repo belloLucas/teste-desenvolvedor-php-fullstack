@@ -1,75 +1,97 @@
 [![](https://startgov.com.br/wp-content/uploads/2023/11/LOGO_VETOR.png)](https://www.startgov.com.br)
 
-# Nossa empresa
+# Plataforma de Gestão de Fornecedores
 
-A StartGov é uma empresa que se dedica a criar soluções inovadoras focadas na gestão de contratações, especialmente voltadas para o setor público. A empresa oferece um conjunto de ferramentas destinadas a facilitar e otimizar processos burocráticos relacionados a licitações, contratações diretas, gestão de contratos, ordens de fornecimento e serviço, além do cadastro de fornecedores. Essas soluções visam aumentar a celeridade dos trâmites administrativos e permitir a implementação de fluxos e processos padronizados.
+Este é um projeto de teste para a StartGov que consiste em uma plataforma para o cadastro e gerenciamento de fornecedores, utilizando Laravel para o backend e Vue.js para o frontend.
 
-# Conheça mais sobre a StartGov
+## Tecnologias Utilizadas
 
-- Nosso Site - https://www.startgov.com.br/
-- Nosso Instagram - https://www.instagram.com/startgov/
+O projeto é construído com as seguintes tecnologias:
 
-## Teste para Desenvolvedor PHP/Laravel e Vue.js
+- **Backend**:
+  - PHP / Laravel
+  - MySQL
+  - Pest (Testes Automatizados)
+- **Frontend**:
+  - Vue.js
+  - Vite
+  - Tailwind CSS
+  - Axios
+  - Zod
+  - Maska
+- **Ambiente de Desenvolvimento**:
+  - Docker
+  - Docker Compose
 
-Bem-vindo ao teste de desenvolvimento para a posição de Desenvolvedor PHP/Laravel e Vue.js. O objetivo deste teste é desenvolver uma plataforma para o cadastro de fornecedores, permitindo a busca por CNPJ ou CPF, utilizando Laravel no backend e Vue.js no frontend.
+## Pré-requisitos
 
-## Descrição do Projeto
+Antes de começar, certifique-se de ter o Docker e o Docker Compose instalados em sua máquina.
 
-### Backend (API Laravel):
+- [Docker](https://docs.docker.com/get-docker/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
 
-#### CRUD de Fornecedores:
+## Como Rodar o Projeto
 
-- **Criar Fornecedor:**
-  - Permita o cadastro de fornecedores usando CNPJ ou CPF, incluindo informações como nome/nome da empresa, contato, endereço, etc.
-  - Valide a integridade e o formato dos dados, como o formato correto de CNPJ/CPF e a obrigatoriedade de campos.
+Siga os passos abaixo para configurar e executar o ambiente de desenvolvimento.
 
-- **Editar Fornecedor:**
-  - Facilite a atualização das informações de fornecedores, mantendo a validação dos dados.
+1.  **Clone o repositório:**
 
-- **Excluir Fornecedor:**
-  - Possibilite a remoção segura de fornecedores.
+    ```sh
+    git clone https://github.com/belloLucas/teste-desenvolvedor-php-fullstack.git
+    cd teste-desenvolvedor-php-fullstack
+    ```
 
-- **Listar Fornecedores:**
-  - Apresente uma lista paginada de fornecedores, com filtragem e ordenação.
+2.  **Configurar Variáveis de Ambiente:**
 
-#### Migrations:
+    Copie os arquivos de exemplo `.env.example` para criar seus próprios arquivos `.env`.
 
-- Utilize migrations do Laravel para definir a estrutura do banco de dados, garantindo uma boa organização e facilidade de manutenção.
+    Para o backend:
 
-### Frontend (Vue.js):
+    ```sh
+    cp backend/.env.example backend/.env
+    ```
 
-- Desenvolva interfaces para todas as operações do CRUD, com validações e feedback visual adequado.
+    Para o frontend:
+    O arquivo [frontend/.env](frontend/.env) já deve estar configurado, mas certifique-se de que `VITE_API_URL` aponta para o endereço do seu backend (`http://localhost:8000/api`).
 
-## Requisitos
+3.  **Subir os contêineres com Docker Compose:**
 
-### Backend:
-- Implementar busca por CNPJ na [BrasilAPI](https://brasilapi.com.br/docs#tag/CNPJ/paths/~1cnpj~1v1~1{cnpj}/get) ou qualquer outro endpoint público.
+    Este comando irá construir as imagens e iniciar os serviços do backend, frontend e banco de dados.
 
-## Tecnologias a serem utilizadas
-- HTML
-- CSS
-- VueJS 2.x ou superior
-- Framework Laravel (PHP) 9.x ou superior
-- MySQL ou Postgres
-- Pode utilizar Bootstrap ou qualquer outro UI Design
+    ```sh
+    docker-compose up -d --build
+    ```
 
-## Critérios de Avaliação
+4.  **Instalar dependências do Backend e gerar a chave da aplicação:**
 
-- Adesão aos requisitos funcionais e técnicos.
-- Qualidade do código, incluindo organização, padrões de desenvolvimento e segurança.
-- Usabilidade e design das interfaces de usuário.
-- Documentação do projeto, incluindo um README detalhado com instruções de instalação e operação.
+    Execute os seguintes comandos para entrar no contêiner do backend e instalar as dependências do Composer e gerar a chave do Laravel.
 
-## Bônus
+    ```sh
+    docker-compose exec backend composer install
+    docker-compose exec backend php artisan key:generate
+    ```
 
-- Implementação de testes automatizados.
-- Dockerização do ambiente de desenvolvimento.
-- Implementação de cache para otimizar o desempenho.
+5.  **Executar as Migrations do Banco de Dados:**
 
-## Entrega
+    Para criar as tabelas no banco de dados, execute o comando de migration do Laravel.
 
-- Para iniciar o teste, faça um fork deste repositório; Se você apenas clonar o repositório não vai conseguir fazer push.
-- Crie uma branch com o nome que desejar;
-- Altere o arquivo README.md com as informações necessárias para executar o seu teste (comandos, migrations, seeds, etc);
-- Depois de finalizado, envie-nos o pull request;
+    ```sh
+    docker-compose exec backend php artisan migrate
+    ```
 
+## Rodando os Testes
+
+O backend utiliza [Pest](https://pestphp.com/) para os testes de unidade e de funcionalidade. Para executar a suíte de testes, utilize o seguinte comando:
+
+```sh
+docker-compose exec backend php artisan test
+```
+
+## Acessando a Aplicação
+
+Após seguir todos os passos, a aplicação estará disponível nos seguintes endereços:
+
+- **Frontend (Vue.js):** [http://localhost:5173](http://localhost:5173)
+- **Backend (API Laravel):** [http://localhost:8000](http://localhost:8000)
+
+Agora você pode acessar a interface do frontend no seu navegador para interagir com a aplicação.
