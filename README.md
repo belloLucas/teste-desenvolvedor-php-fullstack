@@ -157,3 +157,126 @@ Após seguir todos os passos, a aplicação estará disponível nos seguintes en
 - **Backend (API Laravel):** [http://localhost:8000](http://localhost:8000)
 
 Agora você pode acessar a interface do frontend no seu navegador para interagir com a aplicação.
+
+## Endpoints da API
+
+Todos os endpoints estão prefixados com `/api`.
+
+### Fornecedores (`/suppliers`)
+
+#### `GET /suppliers`
+
+Lista todos os fornecedores com paginação.
+
+-   **Query Params (Opcionais):**
+    -   `per_page` (int): Número de itens por página. Padrão: `5`.
+    -   `page` (int): Número da página.
+    -   `name` (string): Filtra por nome do fornecedor.
+    -   `document_type` (string): Filtra por tipo de documento (`CPF` ou `CNPJ`).
+    -   `sort_by` (string): Ordena os resultados. Valores possíveis: `name`, `document_type`, `createdAt`.
+-   **Retorno (200 OK):**
+    ```json
+    {
+        "current_page": 1,
+        "data": [
+            {
+                "id": 1,
+                "name": "Fornecedor Exemplo",
+                "phone": "11999998888",
+                "address": "Rua Exemplo",
+                "house_number": "123",
+                "neighborhood": "Bairro Teste",
+                "city": "São Paulo",
+                "uf": "SP",
+                "document_type": "CNPJ",
+                "document_number": "75574868000102",
+                "created_at": "2025-07-06T18:00:00.000000Z",
+                "updated_at": "2025-07-06T18:00:00.000000Z"
+            }
+        ],
+        "first_page_url": "http://localhost:8000/api/suppliers?page=1",
+        "from": 1,
+        "last_page": 1,
+        "last_page_url": "http://localhost:8000/api/suppliers?page=1",
+        "links": [...],
+        "next_page_url": null,
+        "path": "http://localhost:8000/api/suppliers",
+        "per_page": 5,
+        "prev_page_url": null,
+        "to": 1,
+        "total": 1
+    }
+    ```
+
+#### `GET /suppliers/{id}`
+
+Busca um fornecedor específico pelo ID.
+
+-   **Retorno (200 OK):** Objeto do fornecedor.
+-   **Retorno (404 Not Found):** Se o fornecedor não for encontrado.
+
+#### `GET /suppliers/document`
+
+Busca um fornecedor pelo tipo e número do documento.
+
+-   **Query Params (Obrigatórios):**
+    -   `document_type` (string): `CPF` ou `CNPJ`.
+    -   `document_number` (string): Número do documento.
+-   **Retorno (200 OK):** Objeto do fornecedor.
+-   **Retorno (404 Not Found):** Se o fornecedor não for encontrado.
+-   **Retorno (400 Bad Request):** Se os parâmetros não forem fornecidos.
+
+#### `GET /suppliers/fetch-cnpj/{cnpj}`
+
+Busca dados de uma empresa a partir de um CNPJ em uma API externa (BrasilAPI).
+
+-   **Retorno (200 OK):** Objeto com os dados da empresa.
+-   **Retorno (404 Not Found):** Se o CNPJ não for encontrado na API externa.
+
+#### `POST /suppliers`
+
+Cria um novo fornecedor.
+
+-   **Corpo da Requisição (JSON):**
+    ```json
+    {
+        "name": "Novo Fornecedor",
+        "phone": "11987654321",
+        "address": "Rua Nova",
+        "house_number": "456",
+        "neighborhood": "Bairro Novo",
+        "city": "Rio de Janeiro",
+        "uf": "RJ",
+        "document_type": "CPF",
+        "document_number": "12345678901"
+    }
+    ```
+-   **Retorno (201 Created):** Objeto do fornecedor criado.
+-   **Retorno (422 Unprocessable Entity):** Em caso de erro de validação.
+
+#### `PATCH /suppliers/{id}`
+
+Atualiza um fornecedor existente.
+
+-   **Corpo da Requisição (JSON):** Campos a serem atualizados.
+    ```json
+    {
+        "name": "Nome Atualizado",
+        "phone": "11911112222"
+    }
+    ```
+-   **Retorno (200 OK):** Objeto do fornecedor atualizado.
+-   **Retorno (404 Not Found):** Se o fornecedor não for encontrado.
+-   **Retorno (422 Unprocessable Entity):** Em caso de erro de validação.
+
+#### `DELETE /suppliers/{id}`
+
+Exclui um fornecedor.
+
+-   **Retorno (200 OK):**
+    ```json
+    {
+        "message": "Supplier deleted successfully"
+    }
+    ```
+-   **Retorno (404 Not Found):** Se o fornecedor não for encontrado.
